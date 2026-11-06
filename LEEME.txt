@@ -1,0 +1,15 @@
+AROMA FINDER – PULLTEX
+
+Archivos de la aplicación:
+- index.html: aplicación principal.
+- manifest.webmanifest: configuración instalable.
+- sw.js: caché para uso sin conexión.
+- icon.svg: icono.
+
+USO:
+1. Abre index.html para probar la aplicación en un ordenador.
+2. Para instalarla como aplicación en Android/iPhone, primero hay que publicar esta carpeta en un alojamiento web HTTPS.
+3. Una vez publicada, abre la dirección en Chrome (Android) o Safari (iPhone) y usa «Añadir a pantalla de inicio» / «Instalar aplicación».
+
+IMPORTANTE:
+La app incorpora los 40 nombres facilitados por el usuario. Las descripciones sensoriales son orientativas y no se presentan como textos oficiales de Pulltex.

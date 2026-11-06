@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#24372f">
+<meta name="description" content="Guía personal e interactiva de los 40 aromas del set Pulltex Wine Essence.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Aroma Finder · Pulltex</title>
+<style>
+:root{color-scheme:light;--ink:#24372f;--muted:#69766f;--paper:#f7f6f1;--card:#fff;--line:#e5e5dc;--accent:#a34d39;--soft:#edf0e9}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:620px;margin:auto;padding:22px 17px 42px}
+header{text-align:center;padding:12px 0 20px}header .glass{font-size:34px}h1{font-family:Georgia,serif;font-size:32px;line-height:1.1;margin:5px 0}header p{color:var(--muted);font-size:12px;letter-spacing:1.5px;margin:7px 0}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;background:#e9e9e1;padding:5px;border-radius:14px;margin-bottom:20px}
+.tabs button{border:0;border-radius:10px;padding:12px;background:transparent;color:var(--ink);font-weight:650;font-size:15px}
+.tabs button.active{background:#fff;box-shadow:0 1px 4px #0001}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:19px;box-shadow:0 6px 22px #24372f0a}
+h2{font: bold 22px Georgia,serif;margin:0 0 5px}.sub{color:var(--muted);font-size:14px;margin:0 0 17px}
+label{display:block;font-weight:650;margin:14px 0 7px}
+input,select{width:100%;font:inherit;border:1px solid #d8dacf;border-radius:12px;padding:14px;background:#fff;color:var(--ink);outline-color:var(--accent)}
+input{font-size:24px;font-weight:650}
+.result{margin-top:16px;background:var(--soft);border-radius:15px;padding:18px}
+.kicker{font-size:11px;letter-spacing:1.1px;color:var(--muted);font-weight:750}
+.name{font: bold 32px Georgia,serif;margin:4px 0 10px}
+.pill{display:inline-block;border-radius:99px;background:#fff;padding:5px 10px;font-size:12px;color:var(--ink);border:1px solid #dfe3d9}
+.desc{margin:13px 0 0}
+.note{font-size:12px;color:var(--muted);margin:13px 2px 0}
+button.primary{width:100%;border:0;border-radius:12px;padding:14px;background:var(--ink);color:#fff;font:650 16px system-ui;cursor:pointer;margin-top:14px}
+button.secondary{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;color:var(--ink);font:650 14px system-ui;cursor:pointer;margin-top:9px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.feedback{margin-top:13px;padding:13px;border-radius:12px;background:var(--soft);font-weight:600}
+.score{display:flex;justify-content:space-between;color:var(--muted);font-size:14px;margin-top:16px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:22px 5px}
+.hidden{display:none!important}
+@media(min-width:600px){main{padding-top:35px}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="glass">🍷</div><h1>Aroma Finder</h1><p>PULLTEX · WINE ESSENCE · 40 AROMAS</p></header>
+<nav class="tabs" aria-label="Secciones">
+<button id="tabLookup" class="active" type="button">Consulta</button>
+<button id="tabLearn" type="button">Aprendizaje</button>
+</nav>
+<section id="lookup" class="panel">
+<h2>¿Qué aroma es?</h2><p class="sub">Introduce el número que aparece en la etiqueta del frasco.</p>
+<label for="aromaNumber">Número del frasco</label>
+<input id="aromaNumber" type="number" inputmode="numeric" min="1" max="40" placeholder="Del 1 al 40">
+<div id="lookupResult" aria-live="polite"></div>
+<p class="note">También puedes escribir el número directamente. La consulta funciona sin conexión una vez instalada.</p>
+</section>
+<section id="learning" class="panel hidden">
+<h2>Entrena tu memoria olfativa</h2><p class="sub">Lee el aroma e intenta recordar el número de su frasco.</p>
+<div class="result"><div class="kicker" id="questionCount">PREGUNTA 1</div><div class="name" id="questionName">Fresa</div><span class="pill" id="questionFamily">Fruta roja</span></div>
+<label for="answer">¿Qué número corresponde?</label>
+<select id="answer"><option value="">Selecciona un número</option></select>
+<div id="quizFeedback" aria-live="polite"></div>
+<button class="primary" id="checkAnswer" type="button">Comprobar respuesta</button>
+<button class="secondary hidden" id="nextQuestion" type="button">Siguiente aroma</button>
+<div class="score"><span>Aciertos en esta sesión</span><strong id="score">0</strong></div>
+<button class="secondary" id="resetQuiz" type="button">Reiniciar entrenamiento</button>
+</section>
+<footer>Tu biblioteca personal de aromas · Descripciones didácticas orientativas.</footer>
+</main>
+<script>
+const aromas = [{"n": 1, "a": "Fresa", "f": "Fruta roja", "d": "Recuerda a la fresa fresca y madura, con notas dulces y ligeramente ácidas."}, {"n": 2, "a": "Ciruela", "f": "Fruta roja y negra", "d": "Fruta carnosa, dulce y madura. Puede recordar a ciruela fresca o compotada."}, {"n": 3, "a": "Grosella", "f": "Fruta roja", "d": "Aroma de pequeños frutos rojos, fresco, ácido y ligeramente vegetal."}, {"n": 4, "a": "Frambuesa", "f": "Fruta roja", "d": "Fruta roja delicada, fresca, dulce y con un punto ácido."}, {"n": 5, "a": "Regaliz", "f": "Especiado y balsámico", "d": "Nota dulce, anisada y balsámica, característica de algunos vinos tintos."}, {"n": 6, "a": "Pino", "f": "Balsámico", "d": "Recuerda a las agujas de pino, la resina y el bosque mediterráneo."}, {"n": 7, "a": "Tabaco", "f": "Terciario", "d": "Aroma seco y profundo, similar a hojas de tabaco curadas."}, {"n": 8, "a": "Pimienta", "f": "Especiado", "d": "Nota especiada y penetrante, que puede recordar a la pimienta negra recién molida."}, {"n": 9, "a": "Chocolate", "f": "Tostado", "d": "Aroma de cacao y chocolate, desde notas amargas hasta matices dulces."}, {"n": 10, "a": "Trufa", "f": "Terroso", "d": "Aroma de tierra húmeda, hongos y trufa, complejo y profundo."}, {"n": 11, "a": "Vainilla", "f": "Especiado y crianza", "d": "Aroma dulce y cremoso, asociado frecuentemente a la crianza en barrica."}, {"n": 12, "a": "Cuero", "f": "Animal y terciario", "d": "Nota de cuero curtido, piel y aromas animales propios de algunos vinos evolucionados."}, {"n": 13, "a": "Limón", "f": "Cítrico", "d": "Cáscara y pulpa de limón, con sensación fresca, ácida y vivaz."}, {"n": 14, "a": "Pomelo", "f": "Cítrico", "d": "Aroma cítrico con matices amargos, frescos y ligeramente florales."}, {"n": 15, "a": "Membrillo", "f": "Fruta", "d": "Fruta aromática que recuerda al membrillo fresco o a la carne de membrillo."}, {"n": 16, "a": "Manzana", "f": "Fruta", "d": "Puede evocar manzana verde, fresca y ácida, o manzana madura."}, {"n": 17, "a": "Melocotón", "f": "Fruta de hueso", "d": "Fruta madura, jugosa, dulce y con notas delicadamente florales."}, {"n": 18, "a": "Albaricoque", "f": "Fruta de hueso", "d": "Aroma de albaricoque fresco o maduro, con matices dulces y delicados."}, {"n": 19, "a": "Banana", "f": "Fruta", "d": "Aroma dulce de plátano maduro, que puede recordar también a golosinas de banana."}, {"n": 20, "a": "Avellana", "f": "Frutos secos", "d": "Fruto seco tostado, con notas grasas, cálidas y ligeramente dulces."}, {"n": 21, "a": "Miel", "f": "Dulce", "d": "Aroma meloso, floral y dulce, que puede recordar a miel de flores."}, {"n": 22, "a": "Rosa", "f": "Floral", "d": "Aroma delicado de pétalos de rosa, perfumado y ligeramente dulce."}, {"n": 23, "a": "Madreselva", "f": "Floral", "d": "Nota floral y fragante, con matices dulces y de flores blancas."}, {"n": 24, "a": "Boj", "f": "Vegetal", "d": "Aroma vegetal intenso, verde y penetrante, asociado a determinadas variedades blancas."}, {"n": 25, "a": "Caramelo", "f": "Dulce y tostado", "d": "Recuerda al azúcar caramelizado, con matices dulces y tostados."}, {"n": 26, "a": "Bombón Inglés", "f": "Dulce y confitado", "d": "Aroma de fruta confitada y golosinas, con matices dulces y complejos."}, {"n": 27, "a": "Ámbar", "f": "Complejo", "d": "Nota cálida, resinosa y dulce, con evocaciones de miel y sustancias balsámicas."}, {"n": 28, "a": "Mantequilla", "f": "Lácteo", "d": "Aroma lácteo, cremoso y untuoso, asociado a determinados procesos de elaboración."}, {"n": 29, "a": "Higo", "f": "Fruta", "d": "Aroma de higo fresco o seco, con matices dulces y maduros."}, {"n": 30, "a": "Violeta", "f": "Floral", "d": "Nota floral perfumada, delicada y característica de algunos vinos tintos."}, {"n": 31, "a": "Canela", "f": "Especiado", "d": "Especia dulce y cálida, con recuerdos de madera y repostería."}, {"n": 32, "a": "Pimiento verde", "f": "Vegetal", "d": "Nota vegetal fresca, similar al pimiento verde cortado o a su parte interior."}, {"n": 33, "a": "Champiñón", "f": "Terroso y vegetal", "d": "Aroma de hongos frescos, tierra húmeda y champiñón."}, {"n": 34, "a": "Lichi", "f": "Fruta exótica", "d": "Fruta tropical aromática, dulce y floral, con un toque ligeramente ácido."}, {"n": 35, "a": "Té", "f": "Vegetal y seco", "d": "Recuerda a hojas de té secas o infusionadas, con notas vegetales y sutilmente amargas."}, {"n": 36, "a": "Heno", "f": "Vegetal y seco", "d": "Aroma de hierba seca, paja y vegetación deshidratada."}, {"n": 37, "a": "Corcho", "f": "Defecto", "d": "Recuerda al cartón húmedo y al corcho contaminado. Puede asociarse al defecto de TCA."}, {"n": 38, "a": "Moho", "f": "Defecto", "d": "Olor a humedad, sótano cerrado y materia orgánica enmohecida."}, {"n": 39, "a": "Azufre", "f": "Defecto", "d": "Nota sulfúrea que puede recordar a cerillas, fósforos o compuestos azufrados."}, {"n": 40, "a": "Escatol", "f": "Animal y defecto", "d": "Compuesto de olor fecal muy intenso, asociado a determinados defectos aromáticos."}];
+const $ = id => document.getElementById(id);
+function showTab(tab){
+ const learn=tab==='learn';
+ $('lookup').classList.toggle('hidden',learn); $('learning').classList.toggle('hidden',!learn);
+ $('tabLookup').classList.toggle('active',!learn); $('tabLearn').classList.toggle('active',learn);
+}
+$('tabLookup').addEventListener('click',()=>showTab('lookup'));
+$('tabLearn').addEventListener('click',()=>showTab('learn'));
+function renderLookup(){
+ const n=Number($('aromaNumber').value), item=aromas.find(x=>x.n===n);
+ if(! $('aromaNumber').value){$('lookupResult').innerHTML='';return}
+ if(!item){$('lookupResult').innerHTML='<div class="result">Introduce un número válido entre 1 y 40.</div>';return}
+ $('lookupResult').innerHTML=`<div class="result"><div class="kicker">FRASCO Nº ${String(item.n).padStart(2,'0')}</div><div class="name">${item.a}</div><span class="pill">${item.f}</span><p class="desc">${item.d}</p></div>`;
+}
+$('aromaNumber').addEventListener('input',renderLookup);
+aromas.forEach(x=>{const o=document.createElement('option');o.value=x.n;o.textContent=String(x.n).padStart(2,'0');$('answer').appendChild(o)});
+let current=0,score=0,answered=false,order=[];
+function shuffle(){order=[...aromas].sort(()=>Math.random()-.5);current=0;score=0;answered=false;updateQuiz()}
+function updateQuiz(){
+ const item=order[current];$('questionCount').textContent=`PREGUNTA ${current+1} DE 40`;$('questionName').textContent=item.a;$('questionFamily').textContent=item.f;
+ $('answer').value='';$('quizFeedback').innerHTML='';$('score').textContent=score;
+ $('checkAnswer').classList.remove('hidden');$('nextQuestion').classList.add('hidden');answered=false;
+}
+$('checkAnswer').addEventListener('click',()=>{
+ if(answered||!$('answer').value)return;
+ const item=order[current],ok=Number($('answer').value)===item.n;answered=true;if(ok)score++;
+ $('quizFeedback').innerHTML=`<div class="feedback">${ok?'✓ ¡Correcto!':`No es correcto. La respuesta es el número ${item.n}.`}</div>`;
+ $('score').textContent=score;$('checkAnswer').classList.add('hidden');$('nextQuestion').classList.remove('hidden');
+ $('nextQuestion').textContent=current===39?'Volver a empezar':'Siguiente aroma';
+});
+$('nextQuestion').addEventListener('click',()=>{if(current===39){shuffle()}else{current++;updateQuiz()}});
+$('resetQuiz').addEventListener('click',shuffle);
+shuffle();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>
