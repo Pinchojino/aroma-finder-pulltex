@@ -1,15 +1,16 @@
-AROMA FINDER – PULLTEX
+AROMA FINDER – PULLTEX · VERSIÓN 2
 
-Archivos de la aplicación:
-- index.html: aplicación principal.
-- manifest.webmanifest: configuración instalable.
-- sw.js: caché para uso sin conexión.
-- icon.svg: icono.
+Novedades:
+- Fichas ampliadas: descripción sensorial, contexto/origen y ejemplos orientativos.
+- Entrenamiento en rondas aleatorias de 10 preguntas.
+- Estadísticas e historial de rondas guardados localmente en el navegador.
+- Caché de aplicación actualizada.
 
-USO:
-1. Abre index.html para probar la aplicación en un ordenador.
-2. Para instalarla como aplicación en Android/iPhone, primero hay que publicar esta carpeta en un alojamiento web HTTPS.
-3. Una vez publicada, abre la dirección en Chrome (Android) o Safari (iPhone) y usa «Añadir a pantalla de inicio» / «Instalar aplicación».
+Para actualizar GitHub Pages:
+1. Abre el repositorio aroma-finder-pulltex.
+2. Add file > Upload files.
+3. Sube y reemplaza los cinco archivos de esta carpeta.
+4. Pulsa Commit changes.
+5. Espera unos minutos y recarga la web.
 
-IMPORTANTE:
-La app incorpora los 40 nombres facilitados por el usuario. Las descripciones sensoriales son orientativas y no se presentan como textos oficiales de Pulltex.
+Los ejemplos de vinos son orientativos, no reglas de identificación. Los aromas no son exclusivos de variedades o regiones. El historial se almacena en el navegador del dispositivo y no se sincroniza entre dispositivos.

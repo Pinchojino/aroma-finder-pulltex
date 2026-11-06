@@ -1,7 +1,7 @@
 {
   "name": "Aroma Finder – Pulltex",
   "short_name": "Aroma Finder",
-  "description": "Guía personal de los 40 aromas Pulltex.",
+  "description": "Cuaderno digital de cata y aprendizaje de los 40 aromas Pulltex.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
